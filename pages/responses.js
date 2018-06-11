@@ -1,6 +1,6 @@
 
-import Rsvp from '../components/Rsvp'
-import '../style/main.css'
+import Responses from '../components/Responses'
+import Protected from '../components/Protected'
 
 const firebase = require('firebase')
 // Required for side-effects
@@ -20,5 +20,7 @@ if (!firebase.apps.length) {
 const db = firebase.firestore()
 
 export default () => <div>
-  <Rsvp db={db} />
+  <Protected db={db}>
+    <Responses db={db} />
+  </Protected>
 </div>
