@@ -21,28 +21,32 @@ const enhance = compose(
     },
     onSubmitSearch: props => event => {
       event.preventDefault()
-      props.db.collection('guests').where('LastName', '==', props.lastName).get().then(
-        querySnapshot => {
-          if (querySnapshot.docs) {
-            const doc = querySnapshot.docs[0].data()
-            props.updateMembers(doc.members)
+      props.updateSubmitted(false)
+      props.db.collection('guests')
+        .doc(props.lastName)
+        .onSnapshot(
+          doc => {
+            const members = doc.data().members
+            props.updateMembers(members)
+            const newResponse = Object.assign({}, ...members.map(m => ({[m.name]: m.attending})))
+            props.updateResponse(newResponse)
+            props.updateFeedback(doc.data().feedback)
           }
-        }
-      )
+        )
     },
     onSubmitResponse: props => event => {
       event.preventDefault()
-      props.db.collection('responses')
-        .add({response: props.response, LastName: props.lastName, feedback: props.feedback})
-        .then(docRef => console.log('Document written with ID ' + docRef.id))
-        .then(() => props.updateSubmitted(true))
-        .then(() => props.updateMessage('Thanks for responding!'))
-        .catch(err => props.updateMessage('there was a problem. Call Josh and tell him he broke things.', err))
+      const newMembers = Object.keys(props.response).map(key => ({ name: key, attending: props.response[key] }))
+      props.db.collection('guests')
+        .doc(props.lastName)
+        .update({members: newMembers, feedback: props.feedback})
+      props.updateSubmitted(true)
+      props.updateMessage('Thanks for your response!')
     }
   })
 )
 
-const Lookup = enhance(({lastName, message, members, feedback, submitted, handleFeedbackChange, handleLastNameChange, handleSelection, onSubmitSearch, onSubmitResponse}) => (<div>
+const Lookup = enhance(({lastName, message, members, feedback, submitted, handleFeedbackChange, handleLastNameChange, handleSelection, onSubmitSearch, onSubmitResponse, response}) => (<div>
   <form onSubmit={onSubmitSearch}>
     <input placeholder='Enter your last name' value={lastName} onChange={handleLastNameChange} />
     <button type='submit'>Search</button>
@@ -52,11 +56,11 @@ const Lookup = enhance(({lastName, message, members, feedback, submitted, handle
       <p>Please let us know who will be able to attend</p>
       <ul>
         {members.map(m =>
-          <li>{m}
+          <li><label>{m.name} </label>
             <label>No</label>
-            <input type='radio' id={m} value='no' name={m} onChange={handleSelection} />
+            <input type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
             <label>Yes</label>
-            <input type='radio' id={m} value='yes' name={m} onChange={handleSelection} />
+            <input type='radio' id={m.name} value='Yes' checked={response[m.name] === 'Yes'} onChange={handleSelection} />
           </li>)
         }
       </ul>
