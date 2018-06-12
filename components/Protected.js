@@ -12,7 +12,6 @@ const enhance = compose(
       console.log(props)
       props.db.collection('code').where('secret', '==', props.code).get().then(
         querySnapshot => {
-          console.log(querySnapshot)
           if (querySnapshot) {
             props.updateShowContent('true')
           }
