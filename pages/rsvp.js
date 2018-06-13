@@ -1,4 +1,4 @@
-import Lookup from '../components/Lookup'
+import Lookup from '../components/Rsvp'
 
 const firebase = require('firebase')
 // Required for side-effects

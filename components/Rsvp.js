@@ -1,78 +1,92 @@
+
 import { withState, compose, withHandlers } from 'recompose'
 
-const submitRsvp = ({email, name, message, attending, db}) => {
-  console.log({
-    name,
-    email,
-    attending,
-    message
-  })
-  db.collection('rsvp')
-    .add({
-      name,
-      email,
-      attending,
-      message
-    })
-    .then(docRef => console.log('Document written with ID ' + docRef.id))
-    .catch(err => console.error(err))
-}
-
-const attendingOptions = [
-  { label: 'Yes', value: 'Yes' },
-  { label: 'No', value: 'No' }
-]
-
 const enhance = compose(
-  withState('email', 'setEmail', ''),
-  withState('name', 'setName', ''),
-  withState('message', 'setMessage', ''),
-  withState('attending', 'setAttending', 'No'),
+  withState('submitted', 'updateSubmitted', false),
+  withState('feedback', 'updateFeedback', ''),
+  withState('lastName', 'updateLastName', ''),
+  withState('members', 'updateMembers', []),
+  withState('response', 'updateResponse', {}),
+  withState('message', 'updateMessage', undefined),
   withHandlers({
-    onEmailChange: props => event => {
-      props.setEmail(event.target.value)
+    handleClose: props => event => {
+      props.toggleRsvp()
+      props.updateSubmitted(false)
+      props.updateMessage('')
+      props.updateMembers([])
+      props.updateLastName('')
     },
-    onNameChange: props => event => {
-      props.setName(event.target.value)
+    handleFeedbackChange: props => event => {
+      props.updateFeedback(event.target.value)
     },
-    onAttendingChange: props => event => {
-      props.setAttending(event.target.value)
+    handleLastNameChange: props => event => {
+      props.updateLastName(event.target.value)
     },
-    onMessageChange: props => event => {
-      props.setMessage(event.target.value)
+    handleSelection: props => event => {
+      const newResponse = Object.assign({}, props.response, {[event.target.id]: event.target.value})
+      props.updateResponse(newResponse)
     },
-    onSubmit: props => event => {
+    onSubmitSearch: props => event => {
       event.preventDefault()
-      submitRsvp({
-        name: props.name,
-        email: props.email,
-        attending: props.attending,
-        message: props.message,
-        db: props.db
-      })
+      props.updateSubmitted(false)
+      props.db.collection('guests')
+        .doc(props.lastName)
+        .onSnapshot(
+          doc => {
+            const members = doc.data().members
+            props.updateMembers(members)
+            const newResponse = Object.assign({}, ...members.map(m => ({[m.name]: m.attending})))
+            props.updateResponse(newResponse)
+            props.updateFeedback(doc.data().feedback)
+          }
+        )
+    },
+    onSubmitResponse: props => event => {
+      event.preventDefault()
+      const newMembers = Object.keys(props.response).map(key => ({ name: key, attending: props.response[key] }))
+      props.db.collection('guests')
+        .doc(props.lastName)
+        .update({members: newMembers, feedback: props.feedback || ''})
+      props.updateSubmitted(true)
+      props.updateMessage('Thanks for your response!')
     }
   })
 )
 
-const Rsvp = enhance(({ email, name, attending, message, onEmailChange, onAttendingChange, onNameChange, onMessageChange, onSubmit }) => (
-  <form onSubmit={onSubmit}>
-    <label>Name</label>
-    <input value={name} onChange={onNameChange} required />
-    <br />
-    <label>Email</label>
-    <input value={email} onChange={onEmailChange} required />
-    <br />
-    <label>Attending</label>
-    <select onChange={onAttendingChange}>
-      {attendingOptions.map(o => <option value={o.value} key={o.label}>{o.label}</option>)}
-    </select>
-    <br />
-    <textarea value={message} onChange={onMessageChange} />
-    <br />
-    <button type='submit' disabled={!email && attending}>
-      Click me
-    </button>
-  </form>
-))
+const Rsvp = enhance(({lastName, message, members, feedback, submitted, handleFeedbackChange, handleLastNameChange, handleSelection, onSubmitSearch, onSubmitResponse, response, showRsvp, handleClose}) => (
+  <div className='rsvp' hidden={!showRsvp}>
+    <form onSubmit={onSubmitSearch}>
+      <input placeholder='Enter your last name' value={lastName} onChange={handleLastNameChange} />
+      <button type='submit'>Search</button>
+    </form>
+    {(members.length > 0 && !submitted) &&
+      <form onSubmit={onSubmitResponse}>
+        <p>Please let us know who will be able to attend</p>
+        <table>
+          {members.map(m =>
+            <tr>
+              <td>{m.name}</td>
+              <td>
+                <label>No</label>
+                <input type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
+              </td>
+              <td>
+                <label>Yes</label>
+                <input type='radio' id={m.name} value='Yes' checked={response[m.name] === 'Yes'} onChange={handleSelection} />
+              </td>
+            </tr>)
+          }
+        </table>
+        <br />
+        <label>Message (optional)</label>
+        <br />
+        <textarea value={feedback} onChange={handleFeedbackChange} />
+        <br />
+        <button type='submit'>Submit Response</button>
+      </form>
+    }
+    {message && <p>{message}</p>}
+    <button onClick={handleClose} >Close</button>
+  </div>))
 
 export default Rsvp

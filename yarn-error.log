@@ -1,0 +1,55 @@
+Arguments: 
+  /usr/local/Cellar/node/9.9.0/bin/node /Users/jderocher/.yarn/bin/yarn.js add immutable
+
+PATH: 
+  /Users/jderocher/.yarn/bin:/Users/jderocher/.config/yarn/global/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/Users/jderocher/Development/WebDriver:/Users/jderocher/.yarn/bin:/Users/jderocher/.config/yarn/global/node_modules/.bin
+
+Yarn version: 
+  1.6.0
+
+Node version: 
+  9.9.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://npm.hubteam.com/@zeit%2fnext-css: ETIMEDOUT
+      at Timeout._onTimeout (/Users/jderocher/.yarn/lib/cli.js:133819:19)
+      at ontimeout (timers.js:466:11)
+      at tryOnTimeout (timers.js:304:5)
+      at Timer.listOnTimeout (timers.js:267:5)
+
+npm manifest: 
+  {
+    "name": "wedding-rsvp",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "dev": "next",
+      "build": "next build",
+      "start": "next start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "@zeit/next-css": "^0.2.0",
+      "firebase": "^5.0.4",
+      "next": "^6.0.3",
+      "react": "^16.4.0",
+      "react-dom": "^16.4.0",
+      "react-table": "^6.8.6",
+      "recompose": "^0.27.1"
+    },
+    "devDependencies": {
+      "standard": "^11.0.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

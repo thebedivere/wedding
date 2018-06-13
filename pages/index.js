@@ -1,5 +1,9 @@
 
 import Rsvp from '../components/Rsvp'
+import Header from '../components/Header'
+import Body from '../components/Body'
+import Registry from '../components/Registry'
+import { withState, compose, withHandlers } from 'recompose'
 import '../style/main.css'
 
 const firebase = require('firebase')
@@ -19,6 +23,19 @@ if (!firebase.apps.length) {
 
 const db = firebase.firestore()
 
-export default () => <div>
-  <Rsvp db={db} />
+const enhance = compose(
+  withState('showRsvp', 'updateShowRsvp', false),
+  withHandlers({
+    toggleRsvp: props => event => {
+      props.updateShowRsvp(!props.showRsvp)
+    }
+  })
+)
+
+export default enhance(({toggleRsvp, showRsvp}) => <div>
+  <Header toggleRsvp={toggleRsvp} />
+  <Body />
+  <Registry />
+  <Rsvp db={db} showRsvp={showRsvp} toggleRsvp={toggleRsvp} />
 </div>
+)
