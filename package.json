@@ -14,13 +14,19 @@
   "license": "ISC",
   "dependencies": {
     "@zeit/next-css": "^0.2.0",
+    "@zeit/next-sass": "^0.2.0",
+    "bootstrap": "^4.1.1",
     "firebase": "^5.0.4",
+    "folktale": "^2.1.0",
+    "foundation": "^4.2.1-1",
     "next": "^6.0.3",
+    "node-sass": "^4.9.0",
     "ramda": "^0.25.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-table": "^6.8.6",
-    "recompose": "^0.27.1"
+    "recompose": "^0.27.1",
+    "store": "^2.0.12"
   },
   "devDependencies": {
     "standard": "^11.0.1"
