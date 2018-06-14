@@ -54,25 +54,32 @@ const enhance = compose(
 )
 
 const Rsvp = enhance(({lastName, message, members, feedback, submitted, handleFeedbackChange, handleLastNameChange, handleSelection, onSubmitSearch, onSubmitResponse, response, showRsvp, handleClose}) => (
-  <div className='rsvp' hidden={!showRsvp}>
-    <form onSubmit={onSubmitSearch}>
-      <input placeholder='Enter your last name' value={lastName} onChange={handleLastNameChange} />
-      <button type='submit'>Search</button>
-    </form>
-    {(members.length > 0 && !submitted) &&
+  <div className='rsvp-shadow' hidden={!showRsvp}>
+    <div className='rsvp' >
+
+      <form onSubmit={onSubmitSearch}>
+        <input placeholder='Enter your last name' value={lastName} onChange={handleLastNameChange} />
+        <button type='submit'>Search</button>
+      </form>
+      {(members.length > 0 && !submitted) &&
       <form onSubmit={onSubmitResponse}>
+        <br />
         <p>Please let us know who will be able to attend</p>
         <table>
           {members.map(m =>
             <tr>
               <td>{m.name}</td>
               <td>
-                <label>No</label>
-                <input type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
+                <div className='container'>
+                  <label>No</label>
+                  <input type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
+                </div>
               </td>
               <td>
-                <label>Yes</label>
-                <input type='radio' id={m.name} value='Yes' checked={response[m.name] === 'Yes'} onChange={handleSelection} />
+                <div className='container'>
+                  <label>Yes</label>
+                  <input type='radio' id={m.name} value='Yes' checked={response[m.name] === 'Yes'} onChange={handleSelection} />
+                </div>
               </td>
             </tr>)
           }
@@ -80,13 +87,15 @@ const Rsvp = enhance(({lastName, message, members, feedback, submitted, handleFe
         <br />
         <label>Message (optional)</label>
         <br />
-        <textarea value={feedback} onChange={handleFeedbackChange} />
+        <textarea value={feedback} onChange={handleFeedbackChange} cols='50' rows='5' />
         <br />
         <button type='submit'>Submit Response</button>
       </form>
-    }
-    {message && <p>{message}</p>}
-    <button onClick={handleClose} >Close</button>
+      }
+      {message && <p>{message}</p>}
+      <br />
+      <button onClick={handleClose} className='close'>Close</button>
+    </div>
   </div>))
 
 export default Rsvp
