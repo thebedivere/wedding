@@ -1,19 +1,23 @@
 import { withState, compose, withHandlers } from 'recompose'
+import store from 'store'
 
 const enhance = compose(
-  withState('code', 'updateCode', ''),
-  withState('showContent', 'updateShowContent', false),
+  withState('code', 'updateCode', store.get('code')),
+  withState('showContent', 'updateShowContent', store.get('access')),
   withHandlers({
     handleCodeChange: props => event => {
       props.updateCode(event.target.value)
     },
     onSubmit: props => event => {
       event.preventDefault()
-      console.log(props)
+      store.set('code', props.code)
       props.db.collection('code').where('secret', '==', props.code).get().then(
         querySnapshot => {
           if (querySnapshot) {
+            store.set('access', true)
             props.updateShowContent('true')
+          } else {
+            store.set('access', false)
           }
         }
       )

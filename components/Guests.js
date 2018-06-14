@@ -1,7 +1,5 @@
 import { compose, lifecycle, withState, withHandlers } from 'recompose'
 import Guest from './Guest'
-import * as R from 'ramda'
-import '../style/main.css'
 
 const countTotals = guests => {
   const no = [].concat(...guests.map(g =>

@@ -56,45 +56,52 @@ const enhance = compose(
 const Rsvp = enhance(({lastName, message, members, feedback, submitted, handleFeedbackChange, handleLastNameChange, handleSelection, onSubmitSearch, onSubmitResponse, response, showRsvp, handleClose}) => (
   <div className='rsvp-shadow' hidden={!showRsvp}>
     <div className='rsvp' >
-
-      <form onSubmit={onSubmitSearch}>
-        <input placeholder='Enter your last name' value={lastName} onChange={handleLastNameChange} />
-        <button type='submit'>Search</button>
+      <button onClick={handleClose} className='close'>X</button>
+      <h3>RSVP</h3>
+      <form onSubmit={onSubmitSearch} hidden={submitted}>
+        <div className='form-group'>
+          <label for='lastName'>Enter your last name</label>
+          <input className='form-control' value={lastName} id='lastName' onChange={handleLastNameChange} />
+        </div>
+        <button type='submit' class='btn btn-primary'>Search</button>
       </form>
-      {(members.length > 0 && !submitted) &&
-      <form onSubmit={onSubmitResponse}>
-        <br />
-        <p>Please let us know who will be able to attend</p>
-        <table>
-          {members.map(m =>
-            <tr>
-              <td>{m.name}</td>
-              <td>
-                <div className='container'>
-                  <label>No</label>
-                  <input type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
-                </div>
-              </td>
-              <td>
-                <div className='container'>
-                  <label>Yes</label>
-                  <input type='radio' id={m.name} value='Yes' checked={response[m.name] === 'Yes'} onChange={handleSelection} />
-                </div>
-              </td>
-            </tr>)
-          }
-        </table>
-        <br />
-        <label>Message (optional)</label>
-        <br />
-        <textarea value={feedback} onChange={handleFeedbackChange} cols='50' rows='5' />
-        <br />
-        <button type='submit'>Submit Response</button>
-      </form>
-      }
-      {message && <p>{message}</p>}
       <br />
-      <button onClick={handleClose} className='close'>Close</button>
+      {(members.length > 0 && !submitted) &&
+      <div>
+        <p class='card-text'>Please let us know who will be able to attend</p>
+        <form onSubmit={onSubmitResponse}>
+          <table className='table'>
+            <tbody>
+              {members.map(m =>
+                <tr>
+                  <td>{m.name}</td>
+                  <td>
+                    <div className='form-check form-check-inline'>
+                      <input className='form-check-input' type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
+                      <label className='form-check-label' for={m.name}>No</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div className='form-check form-check-inline'>
+                      <input className='form-check-input' type='radio' id={m.name} value='Yes' checked={response[m.name] === 'Yes'} onChange={handleSelection} />
+                      <label className='form-check-label' for={m.name}>Yes</label>
+                    </div>
+                  </td>
+                </tr>)
+              }
+            </tbody>
+          </table>
+          <div class='form-group'>
+            <label>Message (optional)</label>
+            <textarea class='form-control' value={feedback} onChange={handleFeedbackChange} rows='3' />
+          </div>
+          <button type='submit' className='btn btn-primary'>Submit Response</button>
+        </form>
+      </div>
+      }
+      <div class='alert alert-success' role='alert' hidden={!message}>
+        {message}
+      </div>
     </div>
   </div>))
 

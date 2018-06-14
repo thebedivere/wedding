@@ -1,5 +1,5 @@
 import Guests from '../components/Guests'
-
+import Protected from '../components/Protected'
 const firebase = require('firebase')
 // Required for side-effects
 require('firebase/firestore')
@@ -17,4 +17,7 @@ if (!firebase.apps.length) {
 
 const db = firebase.firestore()
 
-export default () => <Guests db={db} />
+export default () =>
+  <Protected db={db} >
+    <Guests db={db} />
+  </Protected>

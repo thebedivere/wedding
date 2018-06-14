@@ -1,5 +1,5 @@
-import Lookup from '../components/Rsvp'
-
+import Responses from '../components/Responses'
+import Protected from '../components/Protected'
 const firebase = require('firebase')
 // Required for side-effects
 require('firebase/firestore')
@@ -17,4 +17,7 @@ if (!firebase.apps.length) {
 
 const db = firebase.firestore()
 
-export default () => <Lookup db={db} />
+export default () =>
+  <Protected db={db} >
+    <Responses db={db} />
+  </Protected>

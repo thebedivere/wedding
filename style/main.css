@@ -1,5 +1,5 @@
 /*----------------------------------- RESET -------------------------------------*/
-html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, legend, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -18,10 +18,7 @@ ol, ul {
 blockquote, q {
 	quotes: none;
 }
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
+
 /*----------------------------------- GENERAL -------------------------------------*/
 body {
 	background-color: #EDF9F9;
@@ -33,6 +30,7 @@ body {
 a {
     color: #555;
 }
+
 b {
 	font-weight: bold;
 }
@@ -42,7 +40,7 @@ header {
 	text-align: center;
 }
 h1 {
-	color: #DB5F31;
+	color: #339E8C;
 	font-family: 'Arimo', sans-serif;
 	font-size: 38px;
 	font-weight: bold;
@@ -78,6 +76,11 @@ nav a {
 	padding: 10px;
 	text-decoration: none;
 }
+
+nav a:hover {
+	color: #ccc;
+}
+
 /*------------------------------ BODY --------------------------------*/
 section {
 	margin: 0 auto;
@@ -119,40 +122,6 @@ section li {
 	padding: 5px 0 0;
 }
 
-button {
-	position: relative;
-	vertical-align: top;
-	width: 175px;
-	height: 32px;
-	padding: 0;
-	/* font-size: 22px; */
-	color: white;
-	text-align: center;
-	/* text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); */
-	background: #339E8C;
-	border: 0;
-	cursor: pointer;
-}
-
-button:hover{
-	background: #164d54;
-}
-
-input {
- height: 30px;
- padding: 0 0 0 5px;
- margin: 0 1em 0 0;
- border: none;
- width: 50%;
- border: 1px solid #339E8C;
-}
-
-textarea {
-	border: none;
-	margin: 1em 0;
-	border: 1px solid #339E8C;
-}
-
 @media only screen and (min-width: 600px) {
 h1 {
 	font-size: 50px;
@@ -183,7 +152,6 @@ h3 {
 	right: 0;
 	margin: 0 auto;
 	width: 50%;
-	min-height: 50%;
 	z-index: 50;
 	padding: 1em;
 	background-color: #EDF9F9;
@@ -199,45 +167,3 @@ h3 {
 	bottom: 0;
 	z-index: 30;
 }
-
-.close{
-	position: absolute;
-	bottom: 1em;
-	right: 1em;
-	background: #EDF9F9;
-	color: #339E8C;
-}
-
-.close:hover {
-	background: #D4E0E0;
-}
-
-table {
-	width: 80%;
-	margin: 1em 0;
-}
-
-td {
-	vertical-align: middle;
-}
-
-.container {
-	display: table;
-	vertical-align: middle;
-}
-
-.container label {
-	display: table-cell;
-	vertical-align: middle;
-}
-
-.container input {
-	display: table-cell;
-	vertical-align: middle;
-	font-size: 22pt;
-	margin-left: 10px;
-}
-
-
-
-
