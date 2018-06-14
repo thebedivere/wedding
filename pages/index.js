@@ -6,7 +6,7 @@ import Registry from '../components/Registry'
 import { withState, compose, withHandlers } from 'recompose'
 import '../style/main.css'
 
-const firebase = require('firebase')
+const firebase = require('firebase/app')
 // Required for side-effects
 require('firebase/firestore')
 
@@ -22,6 +22,10 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore()
+
+db.settings({
+  timestampsInSnapshots: true
+})
 
 const enhance = compose(
   withState('showRsvp', 'updateShowRsvp', false),

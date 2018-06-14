@@ -60,15 +60,15 @@ const Rsvp = enhance(({lastName, message, members, feedback, submitted, handleFe
       <h3>RSVP</h3>
       <form onSubmit={onSubmitSearch} hidden={submitted}>
         <div className='form-group'>
-          <label for='lastName'>Enter your last name</label>
+          <label htmlFor='lastName'>Enter your last name</label>
           <input className='form-control' value={lastName} id='lastName' onChange={handleLastNameChange} />
         </div>
-        <button type='submit' class='btn btn-primary'>Search</button>
+        <button type='submit' className='btn btn-primary'>Search</button>
       </form>
       <br />
       {(members.length > 0 && !submitted) &&
       <div>
-        <p class='card-text'>Please let us know who will be able to attend</p>
+        <p className='card-text'>Please let us know who will be able to attend</p>
         <form onSubmit={onSubmitResponse}>
           <table className='table'>
             <tbody>
@@ -78,28 +78,28 @@ const Rsvp = enhance(({lastName, message, members, feedback, submitted, handleFe
                   <td>
                     <div className='form-check form-check-inline'>
                       <input className='form-check-input' type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
-                      <label className='form-check-label' for={m.name}>No</label>
+                      <label className='form-check-label' htmlFor={m.name}>No</label>
                     </div>
                   </td>
                   <td>
                     <div className='form-check form-check-inline'>
                       <input className='form-check-input' type='radio' id={m.name} value='Yes' checked={response[m.name] === 'Yes'} onChange={handleSelection} />
-                      <label className='form-check-label' for={m.name}>Yes</label>
+                      <label className='form-check-label' htmlFor={m.name}>Yes</label>
                     </div>
                   </td>
                 </tr>)
               }
             </tbody>
           </table>
-          <div class='form-group'>
+          <div className='form-group'>
             <label>Message (optional)</label>
-            <textarea class='form-control' value={feedback} onChange={handleFeedbackChange} rows='3' />
+            <textarea className='form-control' value={feedback} onChange={handleFeedbackChange} rows='3' />
           </div>
           <button type='submit' className='btn btn-primary'>Submit Response</button>
         </form>
       </div>
       }
-      <div class='alert alert-success' role='alert' hidden={!message}>
+      <div className='alert alert-success' role='alert' hidden={!message}>
         {message}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import Responses from '../components/Responses'
 import Protected from '../components/Protected'
-const firebase = require('firebase')
+const firebase = require('firebase/app')
 // Required for side-effects
 require('firebase/firestore')
 
@@ -16,6 +16,10 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore()
+
+db.settings({
+  timestampsInSnapshots: true
+})
 
 export default () =>
   <Protected db={db} >
