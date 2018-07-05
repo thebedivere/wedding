@@ -1,9 +1,27 @@
 
 import { withState, compose, withHandlers } from 'recompose'
+import { format } from 'date-fns'
 
+const getFeedback = (oldFeedback, feedback) => {
+  if (oldFeedback && feedback) {
+    return `${oldFeedback}|${feedback}`
+  }
+  if (oldFeedback && !feedback) {
+    return oldFeedback
+  }
+  if (!oldFeedback && feedback) {
+    return feedback
+  }
+  return ''
+}
+const formatLastName = lastName => {
+  const lower = lastName.toLowerCase()
+  return lower.charAt(0).toUpperCase() + lower.substr(1)
+}
 const enhance = compose(
   withState('submitted', 'updateSubmitted', false),
   withState('feedback', 'updateFeedback', ''),
+  withState('oldFeedback', 'updateOldFeedback', ''),
   withState('lastName', 'updateLastName', ''),
   withState('members', 'updateMembers', []),
   withState('response', 'updateResponse', {}),
@@ -29,24 +47,33 @@ const enhance = compose(
     onSubmitSearch: props => event => {
       event.preventDefault()
       props.updateSubmitted(false)
+      console.log(props.lastName)
       props.db.collection('guests')
-        .doc(props.lastName)
+        .doc(formatLastName(props.lastName))
         .onSnapshot(
           doc => {
-            const members = doc.data().members
-            props.updateMembers(members)
-            const newResponse = Object.assign({}, ...members.map(m => ({[m.name]: m.attending})))
-            props.updateResponse(newResponse)
-            props.updateFeedback(doc.data().feedback)
+            if (doc.data()) {
+              console.log(doc)
+              props.updateMessage('')
+              const members = doc.data().members
+              props.updateMembers(members)
+              const newResponse = Object.assign({}, ...members.map(m => ({[m.name]: m.attending})))
+              props.updateResponse(newResponse)
+              props.updateOldFeedback(doc.data().feedback)
+            } else {
+              props.updateMessage('No match found')
+            }
           }
         )
     },
     onSubmitResponse: props => event => {
       event.preventDefault()
       const newMembers = Object.keys(props.response).map(key => ({ name: key, attending: props.response[key] }))
+      const feedback = getFeedback(props.oldFeedback, props.feedback)
       props.db.collection('guests')
-        .doc(props.lastName)
-        .update({members: newMembers, feedback: props.feedback || ''})
+        .doc(formatLastName(props.lastName))
+        .update({members: newMembers, feedback})
+      props.db.collection('responses').add({members: newMembers, feedback, time: format(new Date(), 'M/D/YY h:mm A')})
       props.updateSubmitted(true)
       props.updateMessage('Thanks for your response!')
     }
@@ -73,11 +100,11 @@ const Rsvp = enhance(({lastName, message, members, feedback, submitted, handleFe
           <table className='table'>
             <tbody>
               {members.map(m =>
-                <tr>
+                <tr key={m.name}>
                   <td>{m.name}</td>
                   <td>
                     <div className='form-check form-check-inline'>
-                      <input className='form-check-input' type='radio' id={m.name} value='No' checked={response[m.name] !== 'Yes'} onChange={handleSelection} />
+                      <input className='form-check-input' type='radio' id={m.name} value='No' checked={response[m.name] === 'No'} onChange={handleSelection} />
                       <label className='form-check-label' htmlFor={m.name}>No</label>
                     </div>
                   </td>
